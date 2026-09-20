@@ -4,47 +4,6 @@
    ========================================================== */
 (function () {
   "use strict";
-/* ---------------------------------------------------------
-   TELEGRAM NOTIFICATION FUNCTION
-   --------------------------------------------------------- */
-async function sendTelegramNotification(order) {
-  if (typeof TELEGRAM_CONFIG === "undefined" || !TELEGRAM_CONFIG.BOT_TOKEN || !TELEGRAM_CONFIG.CHAT_ID) {
-    console.warn("Telegram config ไม่สมบูรณ์ — ข้ามการส่งแจ้งเตือน");
-    return;
-  }
-
-  const itemsList = order.items
-    .map((it) => `• ${it.name} x${it.qty} (฿${it.lineTotal.toLocaleString()})`)
-    .join("\n");
-
-  const channelTag = order.channel === "pos" ? "🏪 หน้าร้าน (POS)" : "🌐 สั่งซื้อออนไลน์";
-  const paymentText = order.paymentMethod ? `💳 ชำระด้วย: ${order.paymentMethod}\n` : "";
-  const discountText = order.discountAmount > 0 ? `🎟️ ส่วนลด: -฿${order.discountAmount.toLocaleString()}\n` : "";
-
-  const message = 
-    `🛍️ *มีออเดอร์ใหม่เข้ามา!* (${channelTag})\n\n` +
-    `🧾 *Order:* \`${order.orderNumber}\`\n` +
-    `📅 *เวลา:* ${new Date(order.date).toLocaleString("th-TH")}\n\n` +
-    `📦 *รายการสินค้า:*\n${itemsList}\n\n` +
-    `${discountText}` +
-    `💰 *ยอดรวมสุทธิ:* *฿${order.total.toLocaleString()} THB*\n` +
-    `${paymentText}`;
-
-  try {
-    await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CONFIG.CHAT_ID,
-        text: message,
-        parse_mode: "Markdown"
-      })
-    });
-    console.log("ส่งแจ้งเตือน Telegram สำเร็จ!");
-  } catch (err) {
-    console.error("เกิดข้อผิดพลาดในการส่ง Telegram:", err);
-  }
-}
 
   /* ---------------------------------------------------------
      PRODUCT DATA (fixed — do not add items beyond this list)
@@ -67,6 +26,48 @@ async function sendTelegramNotification(order) {
   function productById(id) { return PRODUCTS.find((p) => p.id === Number(id)); }
   function imagePath(p) { return p.slug + ".jpg"; }
   function fmtBaht(n) { return "\u0E3F" + n.toLocaleString("en-US") + " THB"; }
+
+  /* ---------------------------------------------------------
+     TELEGRAM NOTIFICATION FUNCTION
+     --------------------------------------------------------- */
+  async function sendTelegramNotification(order) {
+    if (typeof TELEGRAM_CONFIG === "undefined" || !TELEGRAM_CONFIG.BOT_TOKEN || !TELEGRAM_CONFIG.CHAT_ID) {
+      console.warn("Telegram config ไม่สมบูรณ์ — ข้ามการส่งแจ้งเตือน");
+      return;
+    }
+
+    const itemsList = order.items
+      .map((it) => `• ${it.name} x${it.qty} (${fmtBaht(it.lineTotal)})`)
+      .join("\n");
+
+    const channelTag = order.channel === "pos" ? "🏪 หน้าร้าน (POS)" : "🌐 สั่งซื้อออนไลน์";
+    const paymentText = order.paymentMethod ? `💳 ชำระด้วย: ${order.paymentMethod}\n` : "";
+    const discountText = order.discountAmount > 0 ? `🎟️ ส่วนลด: -${fmtBaht(order.discountAmount)}\n` : "";
+
+    const message = 
+      `🛍️ *มีออเดอร์ใหม่เข้ามา!* (${channelTag})\n\n` +
+      `🧾 *Order:* \`${order.orderNumber}\`\n` +
+      `📅 *เวลา:* ${new Date(order.date).toLocaleString("th-TH")}\n\n` +
+      `📦 *รายการสินค้า:*\n${itemsList}\n\n` +
+      `${discountText}` +
+      `💰 *ยอดรวมสุทธิ:* *${fmtBaht(order.total)}*\n` +
+      `${paymentText}`;
+
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CONFIG.CHAT_ID,
+          text: message,
+          parse_mode: "Markdown"
+        })
+      });
+      console.log("ส่งแจ้งเตือน Telegram สำเร็จ!");
+    } catch (err) {
+      console.error("เกิดข้อผิดพลาดในการส่ง Telegram:", err);
+    }
+  }
 
   /* ---------------------------------------------------------
      POS — starting inventory (fixed simulated stock)
@@ -168,10 +169,6 @@ async function sendTelegramNotification(order) {
 
   /* ---------------------------------------------------------
      POS — DATA BACKEND
-     ---------------------------------------------------------
-     สต๊อกและประวัติการขายเก็บที่ Supabase เมื่อกรอกคีย์ใน
-     supabase-config.js แล้ว ถ้ายังไม่กรอก (หรือ Supabase ล่ม)
-     จะสลับไปใช้ localStorage อัตโนมัติเพื่อให้หน้าเว็บไม่พัง
      --------------------------------------------------------- */
   const INVENTORY_KEY = "lumiere_inventory_v1";
   const SALES_KEY = "lumiere_sales_v1";
@@ -192,14 +189,10 @@ async function sendTelegramNotification(order) {
     ? window.supabase.createClient(SB_CFG.SUPABASE_URL, SB_CFG.SUPABASE_ANON_KEY)
     : null;
 
-  // โหมดที่กำลังใช้งานจริง — จะถูกปรับเป็น false ถ้าเรียก Supabase ไม่สำเร็จ
   let usingSupabase = SB_READY;
-
-  // แคชในหน่วยความจำ เพื่อให้ฟังก์ชัน render ยังเรียกแบบ sync ได้เหมือนเดิม
   let STOCK_CACHE = null;
   let SALES_CACHE = [];
 
-  /* ---------- localStorage backend ---------- */
   function lsGetInventory() {
     let inv = null;
     try { inv = JSON.parse(localStorage.getItem(INVENTORY_KEY)); } catch (e) {}
@@ -221,7 +214,6 @@ async function sendTelegramNotification(order) {
     localStorage.setItem(SALES_KEY, JSON.stringify(sales));
   }
 
-  /* ---------- โหลดสต๊อก ---------- */
   async function loadStock() {
     if (usingSupabase) {
       try {
@@ -240,7 +232,6 @@ async function sendTelegramNotification(order) {
     return STOCK_CACHE;
   }
 
-  // อ่านจากแคช (sync) — ใช้ในฟังก์ชัน render
   function getInventory() {
     if (!STOCK_CACHE) STOCK_CACHE = usingSupabase ? Object.assign({}, DEFAULT_STOCK) : lsGetInventory();
     return STOCK_CACHE;
@@ -258,7 +249,6 @@ async function sendTelegramNotification(order) {
     return status === "out" ? "Out of Stock" : status === "low" ? "Low Stock" : "In Stock";
   }
 
-  /* ---------- โหลดประวัติการขาย ---------- */
   async function loadSales() {
     if (usingSupabase) {
       try {
@@ -295,12 +285,6 @@ async function sendTelegramNotification(order) {
   }
   function getSales() { return SALES_CACHE; }
 
-  /* ---------- บันทึกการขาย + ตัดสต๊อก ----------
-     Supabase: เรียก RPC create_sale ซึ่งเช็คสต๊อก ตัดสต๊อก และบันทึกบิล
-               ใน transaction เดียว (สต๊อกไม่พอ = ยกเลิกทั้งบิล)
-     fallback: ตัดสต๊อกและบันทึกลง localStorage
-     คืนค่า { ok, order, message }
-     --------------------------------------------------------- */
   async function commitSale(lines, paymentMethod, discount) {
     if (usingSupabase) {
       try {
@@ -338,7 +322,6 @@ async function sendTelegramNotification(order) {
       }
     }
 
-    // ----- fallback: localStorage -----
     const inv = lsGetInventory();
     for (const l of lines) {
       if ((inv[l.product.slug] || 0) < l.qty) {
@@ -386,9 +369,7 @@ async function sendTelegramNotification(order) {
   }
 
   /* ---------------------------------------------------------
-     POS — CURRENT ORDER CART (separate from the site shopping cart,
-     so a staff member's in-progress sale never mixes with a
-     customer's own cart on cart.html / order.html)
+     POS — CURRENT ORDER CART
      --------------------------------------------------------- */
   const POS_CART_KEY = "lumiere_pos_cart_v1";
 
@@ -433,17 +414,11 @@ async function sendTelegramNotification(order) {
     return cart;
   }
 
-  /* ---------------------------------------------------------
-     Shared image markup with graceful fallback (never a broken icon)
-     --------------------------------------------------------- */
   function mediaHTML(p, imgClass) {
     return '<img class="' + (imgClass || "") + '" src="' + imagePath(p) + '" alt="' + p.name + '" loading="lazy" ' +
       'onerror="this.onerror=null;this.style.background=\'linear-gradient(160deg,#EDE2CC,#F1E9D8)\';this.removeAttribute(\'src\');">';
   }
 
-  /* ---------------------------------------------------------
-     Product card (used on Home + Collection)
-     --------------------------------------------------------- */
   function productCardHTML(p) {
     return `
       <article class="product-card" data-style="${p.style}">
@@ -475,9 +450,6 @@ async function sendTelegramNotification(order) {
     });
   }
 
-  /* ---------------------------------------------------------
-     Nav: current-page highlight, mobile toggle, cart badge
-     --------------------------------------------------------- */
   function initNav() {
     const page = document.body.dataset.page;
     document.querySelectorAll("[data-nav-links] a[data-page]").forEach((a) => {
@@ -505,9 +477,6 @@ async function sendTelegramNotification(order) {
     if (yearEl) yearEl.textContent = new Date().getFullYear();
   }
 
-  /* ---------------------------------------------------------
-     PAGE: home — featured collection
-     --------------------------------------------------------- */
   function initHome() {
     const grid = document.getElementById("featuredGrid");
     if (!grid) return;
@@ -516,9 +485,6 @@ async function sendTelegramNotification(order) {
     attachCardHandlers(grid);
   }
 
-  /* ---------------------------------------------------------
-     PAGE: collection — filterable grid
-     --------------------------------------------------------- */
   function initCollection() {
     const grid = document.getElementById("productGrid");
     if (!grid) return;
@@ -532,7 +498,6 @@ async function sendTelegramNotification(order) {
       attachCardHandlers(grid);
     }
 
-    // preset filter from ?style= query (case-insensitive: Minimal / minimal / MINIMAL)
     const params = new URLSearchParams(location.search);
     const styleParam = (params.get("style") || "all").toLowerCase();
     const validStyles = ["all", "minimal", "elegant", "sweet", "bold"];
@@ -559,9 +524,6 @@ async function sendTelegramNotification(order) {
     render(initial);
   }
 
-  /* ---------------------------------------------------------
-     PAGE: product detail
-     --------------------------------------------------------- */
   function initProduct() {
     const root = document.getElementById("productDetailRoot");
     if (!root) return;
@@ -604,7 +566,6 @@ async function sendTelegramNotification(order) {
       addBtn._t = setTimeout(() => msg.classList.remove("is-visible"), 2200);
     });
 
-    // Related products: other items sharing the same style
     const relatedGrid = document.getElementById("relatedGrid");
     if (relatedGrid) {
       const related = PRODUCTS.filter((x) => x.style === p.style && x.id !== p.id).slice(0, 3);
@@ -613,9 +574,6 @@ async function sendTelegramNotification(order) {
     }
   }
 
-  /* ---------------------------------------------------------
-     PAGE: cart
-     --------------------------------------------------------- */
   function cartLineHTML(line) {
     const p = line.product;
     return `
@@ -761,6 +719,7 @@ async function sendTelegramNotification(order) {
       const order = {
         orderNumber,
         date: new Date().toISOString(),
+        channel: "online",
         items: cartLines(cart).map((l) => ({
           name: l.product.name, style: l.product.style, price: l.product.price, qty: l.qty, lineTotal: l.lineTotal
         })),
@@ -768,6 +727,10 @@ async function sendTelegramNotification(order) {
         discountAmount, total, customer
       };
       localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(order));
+      
+      // 🔔 ส่งแจ้งเตือนผ่าน Telegram (ออนไลน์)
+      sendTelegramNotification(order);
+
       saveCart([]);
       setDiscount(null);
 
@@ -781,9 +744,6 @@ async function sendTelegramNotification(order) {
     render();
   }
 
-  /* ---------------------------------------------------------
-     PAGE: receipt
-     --------------------------------------------------------- */
   function initReceipt() {
     const root = document.getElementById("receiptRoot");
     if (!root) return;
@@ -983,13 +943,11 @@ async function sendTelegramNotification(order) {
       totalEl.textContent = fmtBaht(total);
     }
 
-    // Search
     searchInput.addEventListener("input", () => {
       currentSearch = searchInput.value.trim().toLowerCase();
       renderProducts();
     });
 
-    // Filter
     filterBar.addEventListener("click", (e) => {
       const btn = e.target.closest(".filter__btn");
       if (!btn) return;
@@ -1003,7 +961,6 @@ async function sendTelegramNotification(order) {
       renderProducts();
     });
 
-    // Discount
     applyBtn.addEventListener("click", () => {
       const code = (discountInput.value || "").trim().toUpperCase();
       if (!code) return;
@@ -1019,7 +976,6 @@ async function sendTelegramNotification(order) {
       renderOrder();
     });
 
-    // Payment method
     payButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
         payButtons.forEach((b) => b.classList.remove("is-selected"));
@@ -1029,14 +985,12 @@ async function sendTelegramNotification(order) {
     });
     if (payButtons.length) payButtons[0].classList.add("is-selected");
 
-    // Checkout — ตัดสต๊อกที่ Supabase ผ่าน RPC create_sale (atomic)
     checkoutBtn.addEventListener("click", async () => {
       const { cart, discount } = currentTotals();
       if (cart.length === 0) return;
 
       const lines = cartLines(cart);
 
-      // ตรวจเบื้องต้นจากแคชก่อน เพื่อบอกผู้ใช้ได้ทันทีโดยไม่ต้องยิง network
       for (const line of lines) {
         if (line.qty > getStock(line.product.slug)) {
           discountMsg.textContent = "สต๊อกไม่พอสำหรับ " + line.product.name;
@@ -1054,7 +1008,6 @@ async function sendTelegramNotification(order) {
       checkoutBtn.textContent = originalLabel;
 
       if (!result.ok) {
-        // สต๊อกที่ฐานข้อมูลอาจถูกตัดไปแล้วจากเครื่องอื่น — รีเฟรชให้ตรงจริง
         discountMsg.textContent = result.message;
         discountMsg.className = "discount-msg is-error";
         await loadStock();
@@ -1065,6 +1018,10 @@ async function sendTelegramNotification(order) {
 
       const order = result.order;
       localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(order));
+      
+      // 🔔 ส่งแจ้งเตือนผ่าน Telegram (POS)
+      sendTelegramNotification(order);
+
       savePosCart([]);
       setDiscount(null);
       discountMsg.textContent = "";
@@ -1088,7 +1045,6 @@ async function sendTelegramNotification(order) {
       });
     }
 
-    // โหลดข้อมูลจริงจาก Supabase ก่อน แล้วค่อย render
     renderProducts();
     renderOrder();
     renderDashboard();
@@ -1102,9 +1058,6 @@ async function sendTelegramNotification(order) {
     });
   }
 
-  /* ---------------------------------------------------------
-     ป้ายบอกสถานะการเชื่อมต่อฐานข้อมูลบนหน้า POS
-     --------------------------------------------------------- */
   function setBackendBadge(state) {
     const el = document.getElementById("posBackendBadge");
     if (!el) return;
@@ -1120,9 +1073,6 @@ async function sendTelegramNotification(order) {
     }
   }
 
-  /* ---------------------------------------------------------
-     PAGE: inventory
-     --------------------------------------------------------- */
   function initInventory() {
     const tbody = document.getElementById("invBody");
     if (!tbody) return;
@@ -1148,9 +1098,6 @@ async function sendTelegramNotification(order) {
     }).join("");
   }
 
-  /* ---------------------------------------------------------
-     PAGE: sales — sales history
-     --------------------------------------------------------- */
   function initSales() {
     const tbody = document.getElementById("salesBody");
     if (!tbody) return;
