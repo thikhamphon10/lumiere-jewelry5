@@ -41,8 +41,8 @@ window.LUMIERE_TELEGRAM = {
   ENABLED: true,
 
   // --- วิธีที่ 1: ยิงตรงจากเบราว์เซอร์ (ง่าย แต่ token เปิดเผย) ---
-  TELEGRAM_BOT_TOKEN: "YOUR_TELEGRAM_BOT_TOKEN_HERE",
-  TELEGRAM_CHAT_ID: "YOUR_TELEGRAM_CHAT_ID_HERE",
+  TELEGRAM_BOT_TOKEN: "8831533132:AAF6nxzyvb444bGIxCetbVwekykDm4N2HT8",
+  TELEGRAM_CHAT_ID: "8728594449",
 
   // --- วิธีที่ 2 (ปลอดภัยกว่า): ส่งผ่าน Supabase Edge Function ---
   // ใส่ URL เช่น https://xxxx.supabase.co/functions/v1/notify-telegram
