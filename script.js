@@ -4,6 +4,47 @@
    ========================================================== */
 (function () {
   "use strict";
+/* ---------------------------------------------------------
+   TELEGRAM NOTIFICATION FUNCTION
+   --------------------------------------------------------- */
+async function sendTelegramNotification(order) {
+  if (typeof TELEGRAM_CONFIG === "undefined" || !TELEGRAM_CONFIG.BOT_TOKEN || !TELEGRAM_CONFIG.CHAT_ID) {
+    console.warn("Telegram config ไม่สมบูรณ์ — ข้ามการส่งแจ้งเตือน");
+    return;
+  }
+
+  const itemsList = order.items
+    .map((it) => `• ${it.name} x${it.qty} (฿${it.lineTotal.toLocaleString()})`)
+    .join("\n");
+
+  const channelTag = order.channel === "pos" ? "🏪 หน้าร้าน (POS)" : "🌐 สั่งซื้อออนไลน์";
+  const paymentText = order.paymentMethod ? `💳 ชำระด้วย: ${order.paymentMethod}\n` : "";
+  const discountText = order.discountAmount > 0 ? `🎟️ ส่วนลด: -฿${order.discountAmount.toLocaleString()}\n` : "";
+
+  const message = 
+    `🛍️ *มีออเดอร์ใหม่เข้ามา!* (${channelTag})\n\n` +
+    `🧾 *Order:* \`${order.orderNumber}\`\n` +
+    `📅 *เวลา:* ${new Date(order.date).toLocaleString("th-TH")}\n\n` +
+    `📦 *รายการสินค้า:*\n${itemsList}\n\n` +
+    `${discountText}` +
+    `💰 *ยอดรวมสุทธิ:* *฿${order.total.toLocaleString()} THB*\n` +
+    `${paymentText}`;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_CONFIG.BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CONFIG.CHAT_ID,
+        text: message,
+        parse_mode: "Markdown"
+      })
+    });
+    console.log("ส่งแจ้งเตือน Telegram สำเร็จ!");
+  } catch (err) {
+    console.error("เกิดข้อผิดพลาดในการส่ง Telegram:", err);
+  }
+}
 
   /* ---------------------------------------------------------
      PRODUCT DATA (fixed — do not add items beyond this list)
