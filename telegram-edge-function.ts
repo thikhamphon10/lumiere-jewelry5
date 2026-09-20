@@ -27,6 +27,7 @@
 
 const ALLOWED_ORIGINS = [
   // เพิ่ม/แก้โดเมนของคุณตรงนี้ได้
+  "https://lumiere-jewelry5.vercel.app",
   "https://lumiere-jewelry4-88ek.vercel.app",
   "http://localhost:3000",
   "http://127.0.0.1:5500",
