@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — LUMIÈRE JEWELRY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="order">
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__mark">LUMIÈRE</a>
+    <nav class="nav__links" data-nav-links>
+      <a href="index.html" data-page="home">Home</a>
+      <a href="collection.html" data-page="collection">Collection</a>
+      <a href="about.html" data-page="about">About</a>
+      <a href="style.html" data-page="style">Style</a>
+      <a href="pos.html" data-page="pos">POS</a>
+    </nav>
+    <div class="nav__actions">
+      <a href="cart.html" class="nav__cart-link" id="cartLink">Cart <span id="cartCount">(0)</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="เปิดเมนู" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav__mobile" id="navMobile" data-nav-links>
+    <a href="index.html" data-page="home">Home</a>
+    <a href="collection.html" data-page="collection">Collection</a>
+    <a href="about.html" data-page="about">About</a>
+    <a href="style.html" data-page="style">Style</a>
+    <a href="pos.html" data-page="pos">POS</a>
+    <a href="cart.html" data-page="cart">Cart</a>
+  </nav>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="page-hero__inner">
+      <p class="eyebrow">Secure Your Piece</p>
+      <h1>Checkout</h1>
+      <p class="page-hero__sub">A simulated checkout — for this educational project only</p>
+    </div>
+  </section>
+
+  <section id="checkoutRoot" hidden>
+    <div class="checkout-layout">
+
+      <div class="order-col" id="checkoutSummaryCol">
+        <h2>Order Summary</h2>
+        <div class="order-summary">
+          <div id="checkoutList"></div>
+
+          <div class="discount-row">
+            <input type="text" id="discountInput" placeholder="Discount code (try LUMIERE10)" autocomplete="off">
+            <button type="button" class="btn-mini btn-mini--solid" id="applyDiscountBtn">Apply</button>
+          </div>
+          <p class="discount-msg" id="discountMsg"></p>
+
+          <div class="order-total-row">
+            <span>Subtotal</span>
+            <span id="checkoutSubtotal">฿0 THB</span>
+          </div>
+          <div class="order-total-row" id="checkoutDiscountRow" hidden>
+            <span>Discount</span>
+            <span id="checkoutDiscountAmount">฿0 THB</span>
+          </div>
+          <div class="order-total-row is-grand">
+            <span>Total</span>
+            <span id="checkoutTotal">฿0 THB</span>
+          </div>
+        </div>
+        <p class="order-note">Educational demo only — no payment is processed and no data is stored.</p>
+      </div>
+
+      <div class="order-col" id="checkoutFormCol">
+        <h2>Delivery Details</h2>
+        <form class="order-form" id="checkoutForm" novalidate>
+          <div class="field">
+            <label for="custName">Full Name</label>
+            <input type="text" id="custName" required>
+          </div>
+          <div class="field--row">
+            <div class="field">
+              <label for="custPhone">Phone Number</label>
+              <input type="tel" id="custPhone" required>
+            </div>
+            <div class="field">
+              <label for="custEmail">Email</label>
+              <input type="email" id="custEmail" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="custAddress">Delivery Address</label>
+            <textarea id="custAddress" required></textarea>
+          </div>
+          <div class="field">
+            <label for="custNotes">Additional Notes (optional)</label>
+            <textarea id="custNotes"></textarea>
+          </div>
+          <button type="submit" class="btn btn--solid btn--block">Place Order</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="order-confirm" id="checkoutConfirm" hidden>
+      <div class="order-confirm__badge">&#10003;</div>
+      <h2>Order Confirmed</h2>
+      <p id="checkoutOrderNumber" style="font-family:var(--display); color:var(--gold-deep); font-size:1.1rem; margin-bottom:6px;"></p>
+      <p id="checkoutTotalConfirm" style="color:var(--ink-70); margin-bottom:36px;"></p>
+      <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+        <a href="receipt.html" class="btn btn--solid">View Receipt</a>
+        <a href="index.html" class="btn btn--dark">Back to Home</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="empty-state" id="checkoutEmpty" hidden style="padding:100px var(--gutter) 140px;">
+    <p>Your cart is empty — add something before checking out.</p>
+    <a href="collection.html" class="btn btn--solid">Explore Collection</a>
+  </section>
+</main>
+
+<footer class="footer">
+  <p class="footer__mark">LUMIÈRE</p>
+  <p class="footer__tagline">Jewelry That Reflects You</p>
+  <div class="footer__rule" aria-hidden="true"></div>
+  <nav class="footer__links">
+    <a href="index.html">Home</a>
+    <a href="collection.html">Collection</a>
+    <a href="about.html">About</a>
+    <a href="style.html">Style</a>
+    <a href="pos.html">POS</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+  <p class="footer__meta">Educational Project — Created for Academic Purpose</p>
+  <p class="footer__copy">&copy; LUMIÈRE JEWELRY. All rights reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

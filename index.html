@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIÈRE JEWELRY — Jewelry That Reflects You</title>
+<meta name="description" content="LUMIÈRE JEWELRY — เครื่องประดับที่สะท้อนตัวตนและความรู้สึกของคุณในทุกช่วงเวลา">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__mark">LUMIÈRE</a>
+    <nav class="nav__links" data-nav-links>
+      <a href="index.html" data-page="home">Home</a>
+      <a href="collection.html" data-page="collection">Collection</a>
+      <a href="about.html" data-page="about">About</a>
+      <a href="style.html" data-page="style">Style</a>
+      <a href="pos.html" data-page="pos">POS</a>
+    </nav>
+    <div class="nav__actions">
+      <a href="cart.html" class="nav__cart-link" id="cartLink">Cart <span id="cartCount">(0)</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="เปิดเมนู" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav__mobile" id="navMobile" data-nav-links>
+    <a href="index.html" data-page="home">Home</a>
+    <a href="collection.html" data-page="collection">Collection</a>
+    <a href="about.html" data-page="about">About</a>
+    <a href="style.html" data-page="style">Style</a>
+    <a href="pos.html" data-page="pos">POS</a>
+    <a href="cart.html" data-page="cart">Cart</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="hero__content">
+      <p class="hero__eyebrow">Fine Jewelry Edit</p>
+      <h1 class="hero__title">LUMIÈRE<span>JEWELRY</span></h1>
+      <div class="hero__rule" aria-hidden="true"></div>
+      <p class="hero__tagline">Jewelry That Reflects You</p>
+      <p class="hero__tagline-th">เครื่องประดับที่สะท้อนตัวตนของคุณ</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="collection.html" class="btn btn--gold">Explore Collection</a>
+        <a href="style.html" class="btn" style="border:1px solid rgba(246,241,230,0.4); color:var(--ivory);">Discover Your Style</a>
+      </div>
+    </div>
+    <div class="hero__scroll" aria-hidden="true"><span></span>Scroll</div>
+  </section>
+
+  <!-- ABOUT TEASER -->
+  <section class="about-block">
+    <div class="section-head" style="margin-bottom:0; text-align:center; max-width:640px;">
+      <p class="eyebrow">About LUMIÈRE</p>
+      <p class="about-block__lede" style="margin:0 auto 18px;">“เครื่องประดับที่สะท้อนตัวตนและความรู้สึกของคุณในทุกช่วงเวลา”</p>
+      <p style="color:var(--ink-70); margin:0 auto 22px;">LUMIÈRE เชื่อว่าเครื่องประดับไม่ใช่แค่สิ่งที่สวมใส่ แต่คือส่วนขยายของตัวตนในแต่ละวัน เราออกแบบเครื่องประดับทุกชิ้นให้เหมาะกับบุคลิกและช่วงเวลาที่แตกต่างกัน — ตั้งแต่เช้าวันธรรมดาไปจนถึงค่ำคืนสำคัญ</p>
+      <a href="about.html" class="link-underline">Read our story →</a>
+    </div>
+  </section>
+
+  <!-- STYLE TEASER -->
+  <section class="mood" id="style">
+    <div class="section-head">
+      <p class="eyebrow">Four Moods, One You</p>
+      <h2>Find Your Style</h2>
+      <p>Every piece belongs to one of four moods. Find the one that sounds like you, then shop it directly.</p>
+    </div>
+    <div class="mood__grid">
+      <article class="mood-card mood-card--minimal">
+        <div class="mood-card__inner">
+          <h3>Minimal</h3>
+          <p>เรียบง่ายและใช้ได้ทุกวัน</p>
+          <a href="collection.html?style=Minimal" class="btn btn--dark">Shop Minimal</a>
+        </div>
+      </article>
+      <article class="mood-card mood-card--elegant">
+        <div class="mood-card__inner">
+          <h3>Elegant</h3>
+          <p>หรูหราและโดดเด่น</p>
+          <a href="collection.html?style=Elegant" class="btn btn--gold">Shop Elegant</a>
+        </div>
+      </article>
+      <article class="mood-card mood-card--sweet">
+        <div class="mood-card__inner">
+          <h3>Sweet</h3>
+          <p>อ่อนหวานและน่ารัก</p>
+          <a href="collection.html?style=Sweet" class="btn btn--dark">Shop Sweet</a>
+        </div>
+      </article>
+      <article class="mood-card mood-card--bold">
+        <div class="mood-card__inner">
+          <h3>Bold</h3>
+          <p>มั่นใจและมีเอกลักษณ์</p>
+          <a href="collection.html?style=Bold" class="btn btn--gold">Shop Bold</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FEATURED COLLECTION -->
+  <section class="collection" id="featured">
+    <div class="section-head">
+      <p class="eyebrow">The Full Edit</p>
+      <h2>Featured Collection</h2>
+      <p>One piece from each mood — a starting point before you browse the full collection.</p>
+    </div>
+    <div class="product-grid product-grid--four" id="featuredGrid"></div>
+    <div style="text-align:center; margin-top:44px;">
+      <a href="collection.html" class="btn btn--dark">View Full Collection</a>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE US -->
+  <section class="why">
+    <div class="section-head">
+      <p class="eyebrow">The LUMIÈRE Difference</p>
+      <h2>Why LUMIÈRE?</h2>
+    </div>
+    <div class="why__list">
+      <article class="why__item">
+        <span class="why__num">01</span>
+        <div>
+          <h3>Express Yourself</h3>
+          <p>เครื่องประดับที่ช่วยสะท้อนตัวตน — designed to be worn as part of you, not on top of you.</p>
+        </div>
+      </article>
+      <article class="why__item">
+        <span class="why__num">02</span>
+        <div>
+          <h3>Every Moment</h3>
+          <p>เหมาะกับทั้งวันธรรมดาและโอกาสพิเศษ — one collection, built for a full range of days.</p>
+        </div>
+      </article>
+      <article class="why__item">
+        <span class="why__num">03</span>
+        <div>
+          <h3>Your Style</h3>
+          <p>เลือก Style ที่เป็นคุณ — four distinct moods, so the choice always feels like yours.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- BRAND STATEMENT -->
+  <section class="statement">
+    <p class="eyebrow" style="color:var(--gold-light); text-align:center;">Ready When You Are</p>
+    <h2 class="statement__en">Your Style.<br>Your Story.<br>Your Jewelry.</h2>
+    <div style="margin-top:40px;">
+      <a href="collection.html" class="btn btn--gold">Explore Collection</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p class="footer__mark">LUMIÈRE</p>
+  <p class="footer__tagline">Jewelry That Reflects You</p>
+  <div class="footer__rule" aria-hidden="true"></div>
+  <nav class="footer__links">
+    <a href="index.html">Home</a>
+    <a href="collection.html">Collection</a>
+    <a href="about.html">About</a>
+    <a href="style.html">Style</a>
+    <a href="pos.html">POS</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+  <p class="footer__meta">Educational Project — Created for Academic Purpose</p>
+  <p class="footer__copy">&copy; LUMIÈRE JEWELRY. All rights reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

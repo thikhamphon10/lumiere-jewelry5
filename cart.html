@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — LUMIÈRE JEWELRY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="cart">
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__mark">LUMIÈRE</a>
+    <nav class="nav__links" data-nav-links>
+      <a href="index.html" data-page="home">Home</a>
+      <a href="collection.html" data-page="collection">Collection</a>
+      <a href="about.html" data-page="about">About</a>
+      <a href="style.html" data-page="style">Style</a>
+      <a href="pos.html" data-page="pos">POS</a>
+    </nav>
+    <div class="nav__actions">
+      <a href="cart.html" class="nav__cart-link" id="cartLink">Cart <span id="cartCount">(0)</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="เปิดเมนู" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav__mobile" id="navMobile" data-nav-links>
+    <a href="index.html" data-page="home">Home</a>
+    <a href="collection.html" data-page="collection">Collection</a>
+    <a href="about.html" data-page="about">About</a>
+    <a href="style.html" data-page="style">Style</a>
+    <a href="pos.html" data-page="pos">POS</a>
+    <a href="cart.html" data-page="cart">Cart</a>
+  </nav>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="page-hero__inner">
+      <p class="eyebrow">Your Selection</p>
+      <h1>Your Cart</h1>
+      <p class="page-hero__sub">Review your pieces before checkout</p>
+    </div>
+  </section>
+
+  <div class="cart-layout">
+    <section id="cartRoot" hidden>
+      <div class="order-summary">
+        <div id="cartList"></div>
+        <div class="order-total-row is-grand">
+          <span>Subtotal</span>
+          <span id="cartSubtotal">฿0 THB</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap; margin-top:28px; justify-content:flex-end;">
+        <a href="collection.html" class="btn btn--dark">Continue Shopping</a>
+        <a href="order.html" class="btn btn--solid">Proceed to Checkout</a>
+      </div>
+    </section>
+
+    <section class="empty-state" id="cartEmpty" hidden>
+      <p>Your cart is empty.</p>
+      <a href="collection.html" class="btn btn--solid">Explore Collection</a>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <p class="footer__mark">LUMIÈRE</p>
+  <p class="footer__tagline">Jewelry That Reflects You</p>
+  <div class="footer__rule" aria-hidden="true"></div>
+  <nav class="footer__links">
+    <a href="index.html">Home</a>
+    <a href="collection.html">Collection</a>
+    <a href="about.html">About</a>
+    <a href="style.html">Style</a>
+    <a href="pos.html">POS</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+  <p class="footer__meta">Educational Project — Created for Academic Purpose</p>
+  <p class="footer__copy">&copy; LUMIÈRE JEWELRY. All rights reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

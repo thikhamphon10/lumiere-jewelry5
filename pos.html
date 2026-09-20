@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Point of Sale — LUMIÈRE JEWELRY</title>
+<meta name="description" content="LUMIÈRE JEWELRY — in-store Point of Sale simulation for this educational project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="pos">
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__mark">LUMIÈRE</a>
+    <nav class="nav__links" data-nav-links>
+      <a href="index.html" data-page="home">Home</a>
+      <a href="collection.html" data-page="collection">Collection</a>
+      <a href="about.html" data-page="about">About</a>
+      <a href="style.html" data-page="style">Style</a>
+      <a href="pos.html" data-page="pos">POS</a>
+    </nav>
+    <div class="nav__actions">
+      <a href="cart.html" class="nav__cart-link" id="cartLink">Cart <span id="cartCount">(0)</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="เปิดเมนู" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav__mobile" id="navMobile" data-nav-links>
+    <a href="index.html" data-page="home">Home</a>
+    <a href="collection.html" data-page="collection">Collection</a>
+    <a href="about.html" data-page="about">About</a>
+    <a href="style.html" data-page="style">Style</a>
+    <a href="pos.html" data-page="pos">POS</a>
+    <a href="cart.html" data-page="cart">Cart</a>
+  </nav>
+</header>
+
+<main>
+  <section class="page-hero">
+    <div class="page-hero__inner">
+      <p class="eyebrow">Staff Tools</p>
+      <h1>Point of Sale</h1>
+      <p class="page-hero__sub">Educational POS simulation — in-store checkout for LUMIÈRE JEWELRY</p>
+    </div>
+  </section>
+
+  <section style="padding-top:60px; padding-bottom:0;">
+    <div class="pos-dash">
+      <div class="stat-card">
+        <p class="stat-card__label">Today's Sales</p>
+        <p class="stat-card__value" id="statSales">฿0 THB</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Number of Orders</p>
+        <p class="stat-card__value" id="statOrders">0</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Items Sold</p>
+        <p class="stat-card__value" id="statItems">0</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-card__label">Average Order</p>
+        <p class="stat-card__value" id="statAvg">฿0 THB</p>
+      </div>
+    </div>
+
+    <nav class="pos-subnav">
+      <a href="pos.html" class="is-current">POS</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="sales.html">Sales History</a>
+      <span style="display:flex; align-items:center; margin-left:auto;">
+        <span class="stock-pill stock-pill--in" id="posBackendBadge">Connecting...</span>
+      </span>
+    </nav>
+  </section>
+
+  <section style="padding-top:0;">
+    <div id="posMainPanel">
+      <div class="pos-layout">
+        <div>
+          <div class="pos-toolbar pos-search">
+            <input type="text" id="posSearch" placeholder="Search product..." autocomplete="off">
+          </div>
+          <div class="filter pos-filter" id="posFilterBar" role="tablist" aria-label="กรองสินค้าตามสไตล์">
+            <button class="filter__btn is-active" data-filter="all" role="tab" aria-selected="true">All</button>
+            <button class="filter__btn" data-filter="minimal" role="tab" aria-selected="false">Minimal</button>
+            <button class="filter__btn" data-filter="elegant" role="tab" aria-selected="false">Elegant</button>
+            <button class="filter__btn" data-filter="sweet" role="tab" aria-selected="false">Sweet</button>
+            <button class="filter__btn" data-filter="bold" role="tab" aria-selected="false">Bold</button>
+          </div>
+          <div class="pos-product-grid" id="posProductGrid"></div>
+        </div>
+
+        <aside class="pos-order-panel">
+          <h2>Current Order</h2>
+          <div id="posOrderList"></div>
+          <p class="pos-order-empty" id="posOrderEmpty">No items yet — add a product to begin.</p>
+
+          <div class="discount-row">
+            <input type="text" id="posDiscountInput" placeholder="Discount code (try LUMIERE10)" autocomplete="off">
+            <button type="button" class="btn-mini btn-mini--solid" id="posApplyDiscountBtn">Apply</button>
+          </div>
+          <p class="discount-msg" id="posDiscountMsg"></p>
+
+          <div class="order-total-row">
+            <span>Subtotal</span>
+            <span id="posSubtotal">฿0 THB</span>
+          </div>
+          <div class="order-total-row" id="posDiscountRow" hidden>
+            <span>Discount</span>
+            <span id="posDiscountAmount">฿0 THB</span>
+          </div>
+          <div class="order-total-row is-grand">
+            <span>Total</span>
+            <span id="posTotal">฿0 THB</span>
+          </div>
+
+          <p class="order-note" style="margin:18px 0 6px;">Payment Method</p>
+          <div class="pay-methods">
+            <button type="button" class="pay-method" data-pay="Cash">Cash</button>
+            <button type="button" class="pay-method" data-pay="Card">Card</button>
+            <button type="button" class="pay-method" data-pay="QR">QR</button>
+          </div>
+
+          <button type="button" class="btn btn--solid btn--block" id="posCheckoutBtn" disabled>Checkout</button>
+          <p class="order-note">Simulation only — no real payment gateway is connected, and no card data is collected.</p>
+        </aside>
+      </div>
+    </div>
+
+    <div class="pos-success" id="posSuccess" hidden>
+      <div class="order-confirm">
+        <div class="order-confirm__badge">&#10003;</div>
+        <h2>Payment Successful</h2>
+        <p id="posSuccessOrderNumber" style="font-family:var(--display); color:var(--gold-deep); font-size:1.1rem; margin-bottom:6px;"></p>
+        <p id="posSuccessTotal" style="color:var(--ink-70); margin-bottom:36px;"></p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+          <a href="receipt.html" class="btn btn--solid">View Receipt</a>
+          <button type="button" class="btn btn--dark" id="posNewSaleBtn">New Sale</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p class="footer__mark">LUMIÈRE</p>
+  <p class="footer__tagline">Jewelry That Reflects You</p>
+  <div class="footer__rule" aria-hidden="true"></div>
+  <nav class="footer__links">
+    <a href="index.html">Home</a>
+    <a href="collection.html">Collection</a>
+    <a href="about.html">About</a>
+    <a href="style.html">Style</a>
+    <a href="pos.html">POS</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+  <p class="footer__meta">Educational Project — Created for Academic Purpose</p>
+  <p class="footer__copy">&copy; LUMIÈRE JEWELRY. All rights reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
